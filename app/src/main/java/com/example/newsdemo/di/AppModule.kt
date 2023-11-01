@@ -4,6 +4,7 @@ import com.example.newsdemo.data.AppConstant
 import com.example.newsdemo.data.api.ApiService
 import com.example.newsdemo.data.datasource.NewsDataSource
 import com.example.newsdemo.data.datasource.NewsDataSourceImpl
+import com.example.newsdemo.ui.theme.repository.NewsRepository
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import dagger.Module
@@ -25,7 +26,7 @@ class AppModule {
     @Singleton
     fun providesRetrofit(): Retrofit {
         val httpLoggingInterceptor = HttpLoggingInterceptor().apply {
-            level = HttpLoggingInterceptor.Level.BODY
+            level = HttpLoggingInterceptor.Level.BASIC
         }
         val httpClient = OkHttpClient().newBuilder().apply {
             addInterceptor(httpLoggingInterceptor)
@@ -48,5 +49,11 @@ class AppModule {
     @Singleton
     fun providesNewsDataSource(apiService: ApiService): NewsDataSource {
         return NewsDataSourceImpl(apiService)
+    }
+
+    @Provides
+    @Singleton
+    fun providesNewsRepository(newsDataSource: NewsDataSource): NewsRepository {
+        return NewsRepository(newsDataSource)
     }
 }

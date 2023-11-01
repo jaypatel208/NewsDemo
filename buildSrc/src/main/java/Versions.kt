@@ -21,4 +21,6 @@ object Versions {
     const val loggingInterceptor = "4.12.0"
     const val coroutinesCore = "1.7.3"
     const val coroutinesAndroid = "1.7.3"
+    const val splashScreen = "1.1.0-alpha02"
+    const val coil = "2.4.0"
 }
