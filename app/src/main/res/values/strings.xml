@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">NewsDemo</string>
+    <string name="no_news">No news as of now\nPlease check in some time</string>
+    <string name="no_internet">Internet connection not found.</string>
 </resources>
