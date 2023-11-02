@@ -25,13 +25,15 @@ const val TAG = "HomeScreen"
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun HomeScreen(newsViewModel: NewsViewModel = hiltViewModel()) {
-    val newsRes by newsViewModel.news.collectAsState()
-
-    val pagerState = rememberPagerState(initialPage = 0, initialPageOffsetFraction = 0f)
 
     if (CoreUtility.isInternetConnected(LocalContext.current)) {
+        val newsRes by newsViewModel.news.collectAsState()
+
+        val pagerState = rememberPagerState(initialPage = 0, initialPageOffsetFraction = 0f) {
+            50
+        }
+
         VerticalPager(
-            pageCount = 100,
             state = pagerState,
             modifier = Modifier.fillMaxSize(),
             pageSize = PageSize.Fill,
