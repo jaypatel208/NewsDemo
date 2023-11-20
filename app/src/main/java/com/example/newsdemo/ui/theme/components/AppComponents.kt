@@ -1,8 +1,11 @@
 package com.example.newsdemo.ui.theme.components
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -12,16 +15,30 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentHeight
+import androidx.compose.foundation.layout.wrapContentSize
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.Close
+import androidx.compose.material.icons.outlined.History
+import androidx.compose.material.icons.outlined.Search
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.SearchBar
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -30,7 +47,6 @@ import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import com.example.newsdemo.R
 import com.example.newsdemo.data.entity.Article
-import com.example.newsdemo.ui.theme.Purple40
 
 @Composable
 fun Loader() {
@@ -44,33 +60,67 @@ fun Loader() {
         CircularProgressIndicator(
             modifier = Modifier
                 .size(60.dp)
-                .padding(10.dp), color = Purple40
+                .padding(10.dp), color = MaterialTheme.colorScheme.primary
         )
     }
 }
 
 @Composable
-fun NormalTextComponent(textValue: String) {
+fun NormalTextComponent(textValue: String, centerAligned: Boolean = false) {
     Text(
         modifier = Modifier
             .fillMaxWidth()
             .padding(8.dp)
             .wrapContentHeight(), text = textValue, style = TextStyle(
-            fontSize = 18.sp, fontWeight = FontWeight.Normal, fontFamily = FontFamily.Monospace, color = Purple40
+            fontSize = 16.sp,
+            fontWeight = FontWeight.Normal,
+            fontFamily = FontFamily(Font(R.font.roboto_regular, FontWeight.Medium)),
+            color = MaterialTheme.colorScheme.onSurface,
+            textAlign = if (centerAligned) TextAlign.Center else TextAlign.Start
         )
     )
 }
 
 @Composable
-fun HeadingTextComponent(textValue: String, centerAligned: Boolean = false) {
+fun HeadingTextComponent(textValue: String) {
     Text(
         modifier = Modifier
             .fillMaxWidth()
             .padding(8.dp)
             .wrapContentHeight(),
         text = textValue,
-        style = TextStyle(fontSize = 24.sp, fontWeight = FontWeight.Medium),
-        textAlign = if (centerAligned) TextAlign.Center else TextAlign.Start
+        style = TextStyle(
+            fontSize = 28.sp,
+            fontWeight = FontWeight.Medium,
+            fontFamily = FontFamily(Font(R.font.roboto_regular, FontWeight.Normal)),
+            color = MaterialTheme.colorScheme.primary
+        )
+    )
+}
+
+@Composable
+fun AuthorTextComponent(textValue: String) {
+    Text(
+        modifier = Modifier
+            .wrapContentSize(), text = textValue, style = TextStyle(
+            fontSize = 12.sp,
+            fontWeight = FontWeight.Normal,
+            fontFamily = FontFamily(Font(R.font.roboto_condensed, FontWeight.Medium)),
+            color = MaterialTheme.colorScheme.inverseSurface, letterSpacing = 0.5.sp
+        )
+    )
+}
+
+@Composable
+fun SourceTextComponent(textValue: String) {
+    Text(
+        modifier = Modifier
+            .wrapContentSize(), text = textValue, style = TextStyle(
+            fontSize = 12.sp,
+            fontWeight = FontWeight.Normal,
+            fontFamily = FontFamily(Font(R.font.roboto_condensed, FontWeight.Medium)),
+            color = MaterialTheme.colorScheme.inverseSurface, letterSpacing = 0.5.sp
+        )
     )
 }
 
@@ -82,13 +132,13 @@ fun AuthorDetailsComponent(authorName: String?, sourceName: String?) {
             .padding(start = 10.dp, end = 10.dp, bottom = 24.dp)
     ) {
         authorName?.also {
-            Text(text = it)
+            AuthorTextComponent(textValue = it)
         }
 
         Spacer(modifier = Modifier.weight(1f))
 
         sourceName?.also {
-            Text(text = it)
+            SourceTextComponent(textValue = it)
         }
     }
 }
@@ -106,7 +156,7 @@ fun EmptyStateComponent() {
             painter = painterResource(id = R.drawable.news_no_data), contentDescription = null
         )
 
-        HeadingTextComponent(textValue = stringResource(R.string.no_news), centerAligned = true)
+        NormalTextComponent(textValue = stringResource(R.string.no_news), centerAligned = true)
     }
 }
 
@@ -123,7 +173,7 @@ fun NoNetworkComponent() {
             painter = painterResource(id = R.drawable.no_network), contentDescription = null
         )
 
-        HeadingTextComponent(textValue = stringResource(R.string.no_internet), centerAligned = true)
+        NormalTextComponent(textValue = stringResource(R.string.no_internet), centerAligned = true)
     }
 }
 
@@ -133,7 +183,7 @@ fun NewsRowComponent(page: Int, article: Article) {
         modifier = Modifier
             .fillMaxSize()
             .padding()
-            .background(Color.White)
+            .background(MaterialTheme.colorScheme.surface)
     ) {
         AsyncImage(
             modifier = Modifier
@@ -159,5 +209,67 @@ fun NewsRowComponent(page: Int, article: Article) {
         Spacer(modifier = Modifier.weight(1f))
 
         AuthorDetailsComponent(article.author, article.source?.name)
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
+@Composable
+fun NewsSearchBar() {
+    var text by remember {
+        mutableStateOf("")
+    }
+    var active by remember {
+        mutableStateOf(false)
+    }
+    val items = remember {
+        mutableStateListOf("Android", "Apple", "War", "Twitter", "Finance")
+    }
+
+    val modifier = if (active) Modifier
+        .fillMaxSize() else Modifier
+        .padding(12.dp)
+    Box(
+        modifier = modifier
+    ) {
+        SearchBar(
+            modifier = Modifier.fillMaxWidth(), query = text,
+            onQueryChange = { text = it },
+            onSearch = {
+                items.add(text)
+                active = false
+            },
+            active = active,
+            onActiveChange = { active = it },
+            leadingIcon = {
+                Icon(imageVector = Icons.Outlined.Search, contentDescription = null)
+            }, trailingIcon = {
+                if (active) {
+                    Icon(
+                        modifier = Modifier.clickable {
+                            if (text.isNotEmpty()) {
+                                text = ""
+                            } else {
+                                active = false
+                            }
+                        },
+                        imageVector = Icons.Outlined.Close,
+                        contentDescription = "Close icon"
+                    )
+                }
+            },
+            placeholder = { Text(text = "Search") }
+        ) {
+            items.asReversed().forEach {
+                Row(modifier = Modifier.padding(all = 14.dp)) {
+                    Icon(
+                        modifier = Modifier.padding(end = 10.dp),
+                        imageVector = Icons.Outlined.History,
+                        contentDescription = "History Icon"
+                    )
+                    Text(text = it)
+                }
+            }
+        }
     }
 }

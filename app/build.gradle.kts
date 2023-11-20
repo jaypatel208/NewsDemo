@@ -86,6 +86,8 @@ dependencies {
     implementation(Dependencies.splashScreen)
 
     implementation(Dependencies.coil)
+
+    implementation(Dependencies.material_extende_icons)
 }
 
 kapt {

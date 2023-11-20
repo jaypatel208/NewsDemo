@@ -23,4 +23,6 @@ object Versions {
     const val coroutinesAndroid = "1.7.3"
     const val splashScreen = "1.1.0-alpha02"
     const val coil = "2.4.0"
+    const val material3 = "1.1.2"
+    const val material_extende_icons = "1.5.4"
 }

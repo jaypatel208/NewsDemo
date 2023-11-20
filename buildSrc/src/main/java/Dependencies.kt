@@ -6,7 +6,7 @@ object Dependencies {
     val ui by lazy { "androidx.compose.ui:ui" }
     val ui_graphics by lazy { "androidx.compose.ui:ui-graphics" }
     val ui_tooling_preview by lazy { "androidx.compose.ui:ui-tooling-preview" }
-    val material3 by lazy { "androidx.compose.material3:material3" }
+    val material3 by lazy { "androidx.compose.material3:material3:${Versions.material3}" }
     val junit by lazy { "junit:junit:${Versions.junit}" }
     val androidx_junit by lazy { "androidx.test.ext:junit:${Versions.androidx_junit}" }
     val espresso_core by lazy { "androidx.test.espresso:espresso-core:${Versions.espresso_core}" }
@@ -36,6 +36,8 @@ object Dependencies {
     val splashScreen by lazy { "androidx.core:core-splashscreen:${Versions.splashScreen}" }
 
     val coil by lazy { "io.coil-kt:coil-compose:${Versions.coil}" }
+
+    val material_extende_icons by lazy { "androidx.compose.material:material-icons-extended:${Versions.material_extende_icons}" }
 }
 
 object Modules {
